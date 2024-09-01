@@ -14,7 +14,7 @@ protected:
     string mName;
     string mSecondName;
     int mPower;
-    int randomCard{};
+    int randomCard{}; 
 
 public:
     // Constructor that initializes CCard object from an input stream
