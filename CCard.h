@@ -1,5 +1,5 @@
 // Include guards
-#pragma once
+#pragma once 
 
 // Import required libraries
 #include <iostream>
