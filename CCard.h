@@ -16,7 +16,7 @@ protected:
     int mPower;
     int randomCard{}; 
 
-public:
+public: 
     // Constructor that initializes CCard object from an input stream
     CCard(istream& file);
 
