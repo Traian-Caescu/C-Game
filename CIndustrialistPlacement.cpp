@@ -4,7 +4,7 @@
 #include "CTable.h"
 
 void CIndustrialistPlacement::AttackEnemy(shared_ptr<CPlayer> player, shared_ptr<CPlayer> enemy)
-{
+{ 
 	const shared_ptr<CTable> enemyTable = enemy->GetTable();
 
     if (enemyTable->mTable.empty()) // if the enemy student card doesn't exist 
