@@ -7,7 +7,7 @@ void PlagiaristHearing::AttackEnemy(shared_ptr<CPlayer> player, shared_ptr<CPlay
 
     const shared_ptr<CTable> enemyTable = enemy->GetTable();
     const int enemyTableSize = enemyTable->mTable.size();
-
+ 
     // Generate a random number to decide which card (or the enemy directly) will be attacked
     const int randomIndex = player->Random(enemyTableSize + 1);
 
