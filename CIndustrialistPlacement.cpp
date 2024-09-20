@@ -10,7 +10,7 @@ void CIndustrialistPlacement::AttackEnemy(shared_ptr<CPlayer> player, shared_ptr
     if (enemyTable->mTable.empty()) // if the enemy student card doesn't exist 
     {
 	    const int damage = this->GetCardPower();
-        enemy->SetPrestige(enemy->GetPrestige() - damage);
+        enemy->SetPrestige(enemy->GetPrestige() - damage); 
 
         cout << this->GetCardName() << " attacks " << enemy->GetName() << ". ";
         cout << enemy->GetName() << "'s prestige is now " << enemy->GetPrestige() << endl;
