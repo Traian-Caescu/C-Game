@@ -3,7 +3,7 @@
 #include "CPlayer.h"
 
 void PlagiaristHearing::AttackEnemy(shared_ptr<CPlayer> player, shared_ptr<CPlayer> enemy) {
-
+ 
 
     const shared_ptr<CTable> enemyTable = enemy->GetTable();
     const int enemyTableSize = enemyTable->mTable.size();
