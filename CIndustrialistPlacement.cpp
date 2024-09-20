@@ -7,7 +7,7 @@ void CIndustrialistPlacement::AttackEnemy(shared_ptr<CPlayer> player, shared_ptr
 {
 	const shared_ptr<CTable> enemyTable = enemy->GetTable();
 
-    if (enemyTable->mTable.empty()) // if the enemy student card doesn't exist
+    if (enemyTable->mTable.empty()) // if the enemy student card doesn't exist 
     {
 	    const int damage = this->GetCardPower();
         enemy->SetPrestige(enemy->GetPrestige() - damage);
