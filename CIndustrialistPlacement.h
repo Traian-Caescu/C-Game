@@ -7,7 +7,7 @@
 class CCard;
 
 using namespace std;
-
+ 
 class CIndustrialistPlacement : public CCard {
 private:
     int mResilience;
