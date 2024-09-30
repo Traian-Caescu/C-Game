@@ -5,7 +5,7 @@
 #include <iostream>
 #include <memory> 
 
-#include "CPlayer.h"
+#include "CPlayer.h" 
   
 // Definition of CCard class, inheriting from enable_shared_from_this
 class CCard : public enable_shared_from_this<CCard> {
