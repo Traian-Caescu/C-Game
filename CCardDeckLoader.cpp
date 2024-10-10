@@ -4,7 +4,7 @@
 #include <iostream>
 #include "CCardUtilities.h"
 
-CCardDeckLoader::CCardDeckLoader(string fileName) : mFileName(fileName) {
+CCardDeckLoader::CCardDeckLoader(string fileName) : mFileName(fileName) { 
     LoadCardDeck();
     LoadSeedNumber();
 }
