@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "CCardUtilities.h"
+#include "CCardUtilities.h" 
 
 CCardDeckLoader::CCardDeckLoader(string fileName) : mFileName(fileName) { 
     LoadCardDeck();
