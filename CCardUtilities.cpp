@@ -3,7 +3,7 @@
 #include "CCourseAccreditation.h"
 #include "CFeedbackForum.h"
 #include "CIndustrialistPlacement.h"
-#include "CStudent.h"
+#include "CStudent.h" 
 #include "CPassLeader.h"
 #include "CPlagiaristHearing.h"
 
