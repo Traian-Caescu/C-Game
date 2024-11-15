@@ -3,7 +3,7 @@
 
 // Constructor that reads data from a file stream and initializes the card's properties
 CCard::CCard(istream& file)
-{
+{ 
     file >> mName >> mSecondName >> mPower;  // Read card name, second name, and power from file
     mName += (" " + mSecondName);  // Combine name and second name into a single string
 }
