@@ -1,24 +1,38 @@
 #pragma once
-#include <iostream>
+#include <string>
 #include <vector>
 #include <memory>
 #include "CCard.h"
+#include "CTable.h"
 
-using namespace std;
-
-class CStudent : public CCard {
-protected:
-    int mResilience{};
+class CPlayer : public std::enable_shared_from_this<CPlayer> {
+private:
+    std::string name;
+    int prestige;
+    std::vector<std::shared_ptr<CCard>> deck;
+    std::shared_ptr<CTable> table;
+    std::vector<std::shared_ptr<CCard>> hand;
 
 public:
-    CStudent(istream& file);
-    friend istream& operator>> (istream& file, CStudent& card);
+    // Constructor
+    CPlayer(const std::string& playerName, int initialPrestige, const std::vector<std::shared_ptr<CCard>>& playerDeck);
 
+    // Draw a card from the deck to the hand
+    void DrawCard();
 
-    void SetCardResilience(int resilience) override;
-    void PlayCard(shared_ptr<CPlayer> player, shared_ptr<CPlayer> enemy) override;
-    void AttackEnemy(shared_ptr<CPlayer> Player, shared_ptr<CPlayer> Enemy) override;
+    // Play a card from the hand
+    void PlayCard(std::shared_ptr<CPlayer> self, std::shared_ptr<CPlayer> enemy);
 
-    int GetCardResilience() const override;
-    string GetCardName() override;
+    // Remove a card from the hand
+    void RemoveCard(const std::shared_ptr<CCard>& card);
+
+    // Getters
+    std::string GetName() const;
+    int GetPrestige() const;
+    std::shared_ptr<CTable> GetTable() const;
+
+    // Setters
+    void SetPrestige(int newPrestige);
+
+    ~CPlayer();
 };
