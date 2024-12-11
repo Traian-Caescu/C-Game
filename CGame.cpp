@@ -1,122 +1,67 @@
-// CGame.cpp
 #include "CGame.h"
 #include <iostream>
 #include <algorithm>
-#include <cstdlib>
 
-// Constructor that initializes the game
-CGame::CGame() : mMaxRounds(30), mCurrentRound(0) {}
+CGame::CGame() : maxRounds(30), currentRound(0) {}
 
-// Destructor for the game
 CGame::~CGame() = default;
 
-
-void CGame::AddPlayer(const shared_ptr<CPlayer>& player) {
-    // Players are added to the mActivePlayers vector
-    mActivePlayers.push_back(player);
+void CGame::AddPlayer(const std::shared_ptr<CPlayer>& player) {
+    players.push_back(player);
 }
 
-
-// Function that initializes the game with the specified parameters
-//void CGame::Initialize(int seed,int initialPrestige)
-//{
-//    srand(seed);  // Seed the random number generator
-//    // mMaxRounds = maxRounds;  // Set the maximum number of rounds
-//
-//    // for loop initializes the prestige for each players
-//    for (const auto player : mActivePlayers)
-//    {
-//        player->SetPrestige(initialPrestige);
-//    }
-//}
-
-// Function that starts the game
-void CGame::Play()
-{
-    cout << "Welcome to U-Can't. Let the winnowing begin... \n" << endl;
-
-    while (mCurrentRound <= mMaxRounds && mActivePlayers.size() > 1) {
-        PlayRound();
-    }
-
-    DisplayWinner();  // Display the winner of the game
+void CGame::Initialize(const CSettings& gameSettings) {
+    settings = gameSettings;
+    maxRounds = (settings.GetDifficulty() == 1) ? 20 : (settings.GetDifficulty() == 3) ? 40 : 30;
+    std::cout << "Game initialized with difficulty level: "
+              << (settings.GetDifficulty() == 1 ? "Easy" : settings.GetDifficulty() == 2 ? "Medium" : "Hard")
+              << " and max rounds: " << maxRounds << std::endl;
 }
 
-// Function that plays a round of the game
-void CGame::PlayRound()
-{
-    if (mCurrentRound == 0)  // On the first round...
-    {
-        // Drawing the cards for all players at the start of the game
-        for (const auto player : mActivePlayers)
-        {
-            player->DrawCard();  // Draw a card for each player
-        }
-    }
-    else  // On subsequent rounds...
-    {
-        cout << "ROUND " << mCurrentRound << endl;
-        cout << "=========" << endl << endl;
+void CGame::Play() {
+    std::cout << "Starting the game...\n" << std::endl;
+    while (currentRound < maxRounds && players.size() > 1) {
+        DisplayRoundStatus();
+        for (size_t i = 0; i < players.size(); ++i) {
+            auto& player = players[i];
+            auto& opponent = players[(i + 1) % players.size()];
 
-        for (int i = 0; i < mActivePlayers.size(); ++i)// It goes through each player
-        {
-            shared_ptr<CPlayer> prof = mActivePlayers[i]; // 
+            player->DrawCard();
+            player->PlayCard(player, opponent);
 
-            // Drawing the cards for the current player
-            prof->DrawCard();
-
-            // Plays the card for the current player against the opponent.
-            int currentPlayer = i;  // Already have index from the loop
-            int nextIndex = (currentPlayer + 1) % mActivePlayers.size();  // Get the index of the next player
-            const shared_ptr<CPlayer> enemy = mActivePlayers[nextIndex];  // Get the next player as the enemy
-
-            prof->PlayCard(prof, enemy);  // Play a card for the current player against the enemy
-
-
-        	// Check if opponent is sacked and update player vector accordingly
-            shared_ptr<CPlayer> sackedPlayer = enemy->GetSacked();  // Check if the enemy player is sacked
-            if (sackedPlayer != nullptr)
-            {
-                mDefeatedPlayers.push_back(sackedPlayer);  // Add the sacked player to the defeated player vector
-                cout << endl << sackedPlayer->GetName() << " has no prestige and is sacked!" << endl << endl;
-                mActivePlayers.erase(find(mActivePlayers.begin(), mActivePlayers.end(), sackedPlayer));  // Remove the sacked player from the active player vector
-
+            if (opponent->GetPrestige() <= 0) {
+                std::cout << opponent->GetName() << " has been defeated and is removed from the game." << std::endl;
+                leaderboard.AddWin(player->GetName());
+                players.erase(players.begin() + ((i + 1) % players.size()));
+                --i; // Adjust index after removal
             }
 
-            // Check if there is only one player left and end the game if so
-            if (mActivePlayers.size() == 1)
-            {
+            if (players.size() == 1) {
                 break;
             }
         }
-
-
+        ++currentRound;
     }
 
-    mCurrentRound++; // Goes to the next round
-}
-
-
-// Function that displays the prestige of all defeated players
-void CGame::DisplaySackedPlayers() const
-{
-    for (const auto prof : mDefeatedPlayers)
-    {
-        cout << prof->GetName() << "'s prestige is " << prof->GetPrestige() << endl;  // Display the player's name and prestige
+    if (players.size() == 1) {
+        std::cout << players[0]->GetName() << " is the winner!" << std::endl;
+        leaderboard.AddWin(players[0]->GetName());
+    } else {
+        std::cout << "Game ended in a draw." << std::endl;
     }
+
+    SaveResults();
 }
 
-// Function that displays the winner of the game
-void CGame::DisplayWinner() const
-{
-    cout << "Game Over" << endl;
-    cout << "=========" << endl;
-    const shared_ptr<CPlayer> player = mActivePlayers[0];  // Get the winning player
-    cout << player->GetName() << "'s prestige is " << player->GetPrestige() << endl;  // Display the winning player's name and prestige
-
-    DisplaySackedPlayers();  // Display the prestige of all defeated players
-
-    cout << endl;
-    cout << player->GetName() << " wins! " << endl;  // Display the name of the winning player
+void CGame::SaveResults() {
+    leaderboard.SaveToFile("leaderboard.txt");
+    std::cout << "Leaderboard updated and saved to file." << std::endl;
 }
 
+void CGame::DisplayRoundStatus() const {
+    std::cout << "\n--- Round " << currentRound + 1 << " ---" << std::endl;
+    for (const auto& player : players) {
+        std::cout << player->GetName() << " - Prestige: " << player->GetPrestige() << std::endl;
+    }
+    std::cout << std::endl;
+}
