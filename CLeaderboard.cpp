@@ -1,76 +1,47 @@
-// CLeaderboard.h
-#pragma once
-#include <string>
-#include <vector>
-#include <map>
-#include <fstream>
-#include <iostream>
-
-class CLeaderboard {
-private:
-    std::map<std::string, int> mScores; // Stores player names and their scores
-
-public:
-    CLeaderboard() = default;
-
-    // Adds or updates the player's score
-    void AddScore(const std::string& playerName, int score);
-
-    // Saves the leaderboard to a file
-    void SaveToFile(const std::string& filename) const;
-
-    // Loads the leaderboard from a file
-    void LoadFromFile(const std::string& filename);
-
-    // Displays the leaderboard
-    void Display() const;
-};
-
-// CLeaderboard.cpp
 #include "CLeaderboard.h"
 
-void CLeaderboard::AddScore(const std::string& playerName, int score) {
-    if (mScores.find(playerName) != mScores.end()) {
-        mScores[playerName] += score;
-    } else {
-        mScores[playerName] = score;
+// Add a win for a player
+void CLeaderboard::AddWin(const std::string& playerName) {
+    leaderboard[playerName]++;
+}
+
+// Display the leaderboard
+void CLeaderboard::DisplayLeaderboard() const {
+    std::cout << "\n--- Leaderboard ---" << std::endl;
+    for (const auto& entry : leaderboard) {
+        std::cout << entry.first << ": " << entry.second << " wins" << std::endl;
     }
 }
 
-void CLeaderboard::SaveToFile(const std::string& filename) const {
-    std::ofstream file(filename);
+// Save the leaderboard to a file
+void CLeaderboard::SaveToFile(const std::string& fileName) const {
+    std::ofstream file(fileName);
     if (!file.is_open()) {
         std::cerr << "Failed to open leaderboard file for writing." << std::endl;
         return;
     }
 
-    for (const auto& entry : mScores) {
+    for (const auto& entry : leaderboard) {
         file << entry.first << " " << entry.second << std::endl;
     }
 
     file.close();
 }
 
-void CLeaderboard::LoadFromFile(const std::string& filename) {
-    std::ifstream file(filename);
+// Load the leaderboard from a file
+void CLeaderboard::LoadFromFile(const std::string& fileName) {
+    std::ifstream file(fileName);
     if (!file.is_open()) {
         std::cerr << "Failed to open leaderboard file for reading." << std::endl;
         return;
     }
 
-    mScores.clear();
-    std::string playerName;
-    int score;
-    while (file >> playerName >> score) {
-        mScores[playerName] = score;
+    leaderboard.clear();
+    std::string name;
+    int wins;
+    while (file >> name >> wins) {
+        leaderboard[name] = wins;
     }
 
     file.close();
-}
-
-void CLeaderboard::Display() const {
-    std::cout << "\n--- Leaderboard ---" << std::endl;
-    for (const auto& entry : mScores) {
-        std::cout << entry.first << ": " << entry.second << " points" << std::endl;
-    }
 }
