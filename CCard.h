@@ -1,45 +1,32 @@
-// Include guards
-#pragma once 
- 
-// Import required libraries    
+#pragma once
+#include <string>
+#include <memory>
 #include <iostream>
-#include <memory>    
+#include "CPlayer.h"
 
-#include "CPlayer.h"  
-   
-// Definition of CCard class, inheriting from enable_shared_from_this
-class CCard : public enable_shared_from_this<CCard> {
+class CCard {
 protected:
-    // Class member variables
-    string mName;
-    string mSecondName;
-    int mPower;
-    int randomCard{}; 
+    std::string name;
+    std::string secondName;
+    int power;
+    int resilience;
 
-public: 
-    // Constructor that initializes CCard object from an input stream
-    CCard(istream& file);
+public:
+    // Constructor
+    CCard(const std::string& cardName, const std::string& cardSecondName, int cardPower, int cardResilience);
 
-    // Overloaded input stream operator to read CCard objects from input streams
-    friend istream& operator>>(istream& file, CCard& card);
+    // Virtual functions for card actions
+    virtual void PlayCard(std::shared_ptr<CPlayer> player, std::shared_ptr<CPlayer> enemy);
+    virtual void AttackEnemy(std::shared_ptr<CPlayer> player, std::shared_ptr<CPlayer> enemy);
 
-    // Virtual methods to be overridden in derived classes
-    virtual void PlayCard(shared_ptr<CPlayer> player, shared_ptr<CPlayer> enemy);
-    virtual void AttackEnemy(shared_ptr<CPlayer> player, shared_ptr<CPlayer> enemy);
+    // Getters
+    std::string GetCardName() const;
+    int GetCardPower() const;
+    int GetCardResilience() const;
 
-    // Setter methods for setting card resilience and power
-    virtual void SetCardResilience(int resilience);
-    virtual void SetCardPower(int power);
+    // Setters
+    void SetCardPower(int newPower);
+    void SetCardResilience(int newResilience);
 
-    // Getter methods for card name, power, and resilience
-    virtual string GetCardName();
-    virtual int GetCardPower();
-    virtual int GetCardResilience() const;
-
-    // Virtual destructor
     virtual ~CCard();
-    
 };
-
-// Define a type alias for a shared_ptr to a CCard object
-using CardPtr = shared_ptr<CCard>;
